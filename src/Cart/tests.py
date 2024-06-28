@@ -1,8 +1,8 @@
 from django.test import TestCase
-from Users.models import User  
-from Product.models import Product 
-from .models import CartItem 
-from Category.models import Category
+from Users.models import User
+from Product.models import Product
+from .models import CartItem
+
 
 class CartItemModelTest(TestCase):
 

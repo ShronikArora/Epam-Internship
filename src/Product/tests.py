@@ -1,11 +1,10 @@
 from django.test import TestCase
-from .models import Product, ProductAttribute, ProductImage
-from Category.models import Category
+from .models import Product, ProductAttribute, ProductImage, Category
+
 
 class ProductModelTest(TestCase):
     # Creates a category and Product
     def setUp(self):
-        
         self.category = Category.objects.create(
             name='Test Category'
         )
@@ -74,3 +73,16 @@ class ProductModelTest(TestCase):
 
         # Check the __str__ method of ProductImage
         self.assertEqual(str(image), 'http://example.com/image.jpg')
+
+
+class CategoryModelTest(TestCase):
+    def setUp(self):
+        self.category = Category.objects.create(
+            name='Test Category'
+        )
+
+    def test_category_creation(self):
+        self.assertEqual(self.category.name, 'Test Category')
+
+    def test_category_str_method(self):
+        self.assertEqual(str(self.category), 'Test Category')

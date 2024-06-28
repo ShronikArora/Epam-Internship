@@ -1,6 +1,7 @@
 from django.test import TestCase
 from .models import User, Address
 
+
 class UserAddressModelTest(TestCase):
 
     def setUp(self):
@@ -49,4 +50,3 @@ class UserAddressModelTest(TestCase):
 
         # Check the __str__ method of Address
         self.assertEqual(str(address), '123 Test Street, Test City, Test State, Test Country')
-

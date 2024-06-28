@@ -1,6 +1,7 @@
 from django.db import models
 from Users.models import User
-from Product.models import Product 
+from Product.models import Product
+
 
 # Create your models here.
 class CartItem(models.Model):
@@ -10,7 +11,7 @@ class CartItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
-        unique_together= ('user', 'product')
+        unique_together = ('user', 'product')
 
     def __str__(self):
         return f"{self.quantity} of {self.product.title} "
