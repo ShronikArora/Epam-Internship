@@ -3,6 +3,8 @@ from Users.models import User, Address
 from Product.models import Product
 from .models import Order, OrderItem
 from decimal import Decimal
+
+
 class OrderModelsTest(TestCase):
 
     def setUp(self):
@@ -70,11 +72,10 @@ class OrderModelsTest(TestCase):
         expected_total = Decimal('199.98').quantize(Decimal('0.00'))
         self.assertEqual(self.order.total_price, expected_total)
 
-
     def test_order_items_related_name(self):
-            order_items = self.order.items.all()
-            self.assertEqual(order_items.count(), 1)
-            self.assertEqual(order_items[0], self.order_item)
+        order_items = self.order.items.all()
+        self.assertEqual(order_items.count(), 1)
+        self.assertEqual(order_items[0], self.order_item)
 
     def test_order_address_str_method(self):
         # Create an Address
