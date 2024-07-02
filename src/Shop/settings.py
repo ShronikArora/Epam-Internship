@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'Review.apps.ReviewConfig'
 
 ]
+AUTH_USER_MODEL = "Users.User"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

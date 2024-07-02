@@ -5,19 +5,20 @@ from .models import User, Address
 class UserAddressModelTest(TestCase):
 
     def setUp(self):
-        # Create a user
-        self.user = User.objects.create(
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpassword',
             email='testuser@example.com'
         )
 
     def test_user_creation(self):
         # Check if the User is created successfully
         self.assertEqual(self.user.email, 'testuser@example.com')
+        self.assertEqual(self.user.username, 'testuser')
 
     def test_user_str_method(self):
         # Check the __str__ method of User
-        self.assertEqual(str(self.user), 'testuser@example.com')
-
+        self.assertEqual(str(self.user), 'testuser')
     def test_address_creation(self):
         # Create an Address
         address = Address.objects.create(

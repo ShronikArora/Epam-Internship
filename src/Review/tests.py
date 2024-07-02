@@ -9,7 +9,9 @@ class ReviewModelTest(TestCase):
 
     def setUp(self):
         # Create a user
-        self.user = User.objects.create(
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpassword',
             email='testuser@example.com'
         )
 
@@ -24,7 +26,6 @@ class ReviewModelTest(TestCase):
         # Create an order
         self.order = Order.objects.create(
             user=self.user,
-            total_price=199.98,
             status='Pending'
         )
 

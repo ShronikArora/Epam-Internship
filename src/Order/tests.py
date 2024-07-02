@@ -1,14 +1,15 @@
 from django.test import TestCase
-from Users.models import User
+from Users.models import User, Address
 from Product.models import Product
 from .models import Order, OrderItem
-
-
+from decimal import Decimal
 class OrderModelsTest(TestCase):
 
     def setUp(self):
         # Create a user
-        self.user = User.objects.create(
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpassword',
             email='testuser@example.com'
         )
 
@@ -23,8 +24,15 @@ class OrderModelsTest(TestCase):
         # Create an order
         self.order = Order.objects.create(
             user=self.user,
-            total_price=199.98,
             status='Pending'
+        )
+        self.address = Address.objects.create(
+            address_line='123 Test Street',
+            city='Test City',
+            state='Test State',
+            zip_code='12345',
+            country='Test Country',
+            user=self.user
         )
 
         # Create an order item
@@ -38,7 +46,6 @@ class OrderModelsTest(TestCase):
     def test_order_creation(self):
         # Check if the Order is created successfully
         self.assertEqual(self.order.user, self.user)
-        self.assertEqual(self.order.total_price, 199.98)
         self.assertEqual(self.order.status, 'Pending')
 
     def test_order_str_method(self):
@@ -57,3 +64,25 @@ class OrderModelsTest(TestCase):
         # Check the __str__ method of OrderItem
         expected_str = f"2 of {self.product.title} in order {self.order.id}"
         self.assertEqual(str(self.order_item), expected_str)
+
+    def test_order_total_price_property(self):
+        # Test the total_price property of the Order model
+        expected_total = Decimal('199.98').quantize(Decimal('0.00'))
+        self.assertEqual(self.order.total_price, expected_total)
+
+
+    def test_order_items_related_name(self):
+            order_items = self.order.items.all()
+            self.assertEqual(order_items.count(), 1)
+            self.assertEqual(order_items[0], self.order_item)
+
+    def test_order_address_str_method(self):
+        # Create an Address
+        address = Address.objects.create(
+            address_line='123 Test Street',
+            city='Test City',
+            state='Test State',
+            zip_code='12345',
+            country='Test Country',
+            user=self.user
+        )

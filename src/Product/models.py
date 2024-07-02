@@ -1,12 +1,27 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.db import models
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 # Create your models here.
-class Category(models.Model):
+class Category(MPTTModel):
     name = models.CharField(max_length=100)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+        level_attr = 'mptt_level'
+        lft_attr = 'mptt_left'
+        rght_attr = 'mptt_right'
+        tree_id_attr = 'mptt_tree_id'
 
     def __str__(self):
         return self.name
+
+    def get_category_tree(self):
+        return self.get_descendants(include_self=True)
 
 
 class Product(models.Model):
