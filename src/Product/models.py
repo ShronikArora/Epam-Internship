@@ -34,10 +34,16 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
+class AttributeType(models.Model):
+    name= models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 
 class ProductAttribute(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='attributes')
-    attribute_name = models.CharField(max_length=100)
+    attribute_name = models.ForeignKey(AttributeType, on_delete=models.CASCADE)
     attribute_value = models.CharField(max_length=100)
 
     def __str__(self):
