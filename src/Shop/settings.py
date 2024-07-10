@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'Product.apps.ProductConfig',
     'Cart.apps.CartConfig',
     'Order.apps.OrderConfig',
-    'Review.apps.ReviewConfig'
+    'Review.apps.ReviewConfig',
+    'rest_framework'
 
 ]
 AUTH_USER_MODEL = "Users.User"

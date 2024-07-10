@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -30,7 +29,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='orderitem',
             name='order',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='items', to='Order.order'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='items',
+                                    to='Order.order'),
         ),
         migrations.AddField(
             model_name='orderitem',

@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -21,7 +20,8 @@ class Migration(migrations.Migration):
                 ('rating', models.DecimalField(decimal_places=2, max_digits=3)),
                 ('description', models.TextField()),
                 ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Order.order')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to='Product.product')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews',
+                                              to='Product.product')),
             ],
         ),
     ]
