@@ -179,6 +179,7 @@ class CategoryModelTest(TestCase):
     """
     Test case for the Category model.
     """
+
     def setUp(self):
         """
         Set up initial test data.
@@ -204,6 +205,7 @@ class ProductAPITestCase(TestCase):
     """
     Test case for the Product API endpoints.
     """
+
     def setUp(self):
         """
         Set up initial test data and API client.
@@ -273,6 +275,7 @@ class ProductSerializerTestCase(TestCase):
     """
     Test case for the ProductSerializer and related serializers.
     """
+
     def setUp(self):
         """
         Set up initial test data.
