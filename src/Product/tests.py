@@ -2,7 +2,7 @@ from django.test import TestCase
 from .models import Product, ProductAttribute, ProductImage, Category, AttributeType
 from rest_framework.test import APIClient
 from rest_framework import status
-from mptt.models import MPTTModel, TreeForeignKey
+from django.urls import reverse
 from .serializers import (
     CategorySerializer,
     ProductSerializer,
@@ -234,7 +234,8 @@ class ProductAPITestCase(TestCase):
         """
         Test the retrieval of categories through the API.
         """
-        response = self.client.get('/api/Products/categories/')
+        url = reverse('category-list')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
@@ -242,7 +243,8 @@ class ProductAPITestCase(TestCase):
         """
         Test the retrieval of products through the API.
         """
-        response = self.client.get('/api/Products/products/')
+        url = reverse('product-list')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
@@ -250,7 +252,8 @@ class ProductAPITestCase(TestCase):
         """
         Test the retrieval of attribute types through the API.
         """
-        response = self.client.get('/api/Products/attribute-types/')
+        url = reverse('attributetype-list')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
@@ -258,7 +261,8 @@ class ProductAPITestCase(TestCase):
         """
         Test the retrieval of product attributes through the API.
         """
-        response = self.client.get('/api/Products/product-attributes/')
+        url = reverse('productattribute-list')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
@@ -266,9 +270,67 @@ class ProductAPITestCase(TestCase):
         """
         Test the retrieval of product images through the API.
         """
-        response = self.client.get('/api/Products/product-images/')
+        url = reverse('productimage-list')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
+
+    def test_create_product(self):
+        """
+        Test the creation of a new product through the API.
+        """
+        url = reverse('product-list')
+        data = {
+            'title': 'Smartphone',
+            'brand': 'BrandY',
+            'description': 'A feature-packed smartphone',
+            'category': self.category.id,
+            'price': '500.00'
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Product.objects.count(), 2)
+        self.assertEqual(Product.objects.get(id=response.data['id']).title, 'Smartphone')
+
+    def test_create_duplicate_product(self):
+        """
+        Test creating a product with a duplicate title.
+        """
+        url = reverse('product-list')
+        data = {
+            'title': 'Laptop',
+            'brand': 'BrandY',
+            'description': 'Another high-performance laptop',
+            'category': self.category.id,
+            'price': '1200.00'
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_delete_product(self):
+        """
+        Test deleting a product through the API.
+        """
+        url = reverse('product-detail', kwargs={'pk': self.product.id})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Product.objects.count(), 0)
+
+    def test_update_product(self):
+        """
+        Test updating a product through the API.
+        """
+        url = reverse('product-detail', kwargs={'pk': self.product.id})
+        data = {
+            'title': 'Updated Laptop',
+            'brand': 'BrandX',
+            'description': 'An updated high-performance laptop',
+            'category': self.category.id,
+            'price': '1100.00'
+        }
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Product.objects.get(id=self.product.id).title, 'Updated Laptop')
 
 
 class ProductSerializerTestCase(TestCase):

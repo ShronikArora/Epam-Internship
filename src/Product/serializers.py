@@ -19,6 +19,24 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
+    def validate(self, data):
+        """
+        Validate category attributes.
+
+        :param data: Category data to validate.
+        :return: Validated data.
+        :raise serializers.ValidationError: If a category with the same name already exists.
+        """
+        # Check if a category with the same name already exists, excluding the current instance if updating
+        if self.instance:
+            if Category.objects.exclude(pk=self.instance.pk).filter(name=data['name']).exists():
+                raise serializers.ValidationError("A category with this name already exists.")
+        else:
+            if Category.objects.filter(name=data['name']).exists():
+                raise serializers.ValidationError("A category with this name already exists.")
+
+        return data
+
 
 class ProductSerializer(serializers.ModelSerializer):
     """
@@ -46,6 +64,14 @@ class ProductSerializer(serializers.ModelSerializer):
         """
         if data['price'] <= 0:
             raise serializers.ValidationError("Price must be greater than 0.")
+
+        if self.instance:
+            if Product.objects.exclude(pk=self.instance.pk).filter(title=data['title']).exists():
+                raise serializers.ValidationError("A product with this title already exists.")
+        else:
+            if Product.objects.filter(title=data['title']).exists():
+                raise serializers.ValidationError("A product with this title already exists.")
+
         return data
 
 

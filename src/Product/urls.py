@@ -25,5 +25,5 @@ router.register(r'product-images', ProductImageViewSet)
 # Define URL patterns
 urlpatterns = [
     path('', api_root, name='api-root'),  # Root URL for API
-    path('Products/', include(router.urls)),  # Include the router URLs
+    path('', include(router.urls)),  # Include the router URLs
 ]
