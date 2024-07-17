@@ -4,6 +4,8 @@ from Users.models import Address
 from Product.models import Product
 from django.conf import settings
 from decimal import Decimal, ROUND_HALF_UP
+
+
 # Create your models here.
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -18,6 +20,7 @@ class Order(models.Model):
     def total_price(self):
         total = self.items.aggregate(total=Sum(F("price") * F("quantity")))["total"]
         return Decimal(total or 0.0).quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')

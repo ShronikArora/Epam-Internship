@@ -1,7 +1,4 @@
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 
 
@@ -34,8 +31,9 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
+
 class AttributeType(models.Model):
-    name= models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name

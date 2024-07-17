@@ -1,3 +1,120 @@
 from django.shortcuts import render
+from rest_framework import viewsets, status
+from rest_framework.decorators import api_view, action
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+from .models import Category, Product, ProductAttribute, ProductImage, AttributeType
+from .serializers import (
+    CategorySerializer,
+    ProductSerializer,
+    AttributeTypeSerializer,
+    ProductAttributeSerializer,
+    ProductImageSerializer
+)
 
-# Create your views here.
+"""
+This module contains viewsets for the API and the root API view.
+"""
+
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    """
+    Root endpoint for the API.
+
+    Provides hyperlinks to the list endpoints of all models.
+
+    :param request: The HTTP request object.
+    :param format: The format suffix (optional).
+    :return: A response containing the URLs of the list endpoints.
+    """
+    return Response({
+        'categories': reverse('category-list', request=request, format=format),
+        'products': reverse('product-list', request=request, format=format),
+        'attribute-types': reverse('attributetype-list', request=request, format=format),
+        'product-attributes': reverse('productattribute-list', request=request, format=format),
+        'product-images': reverse('productimage-list', request=request, format=format),
+    })
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing category instances.
+
+    Attributes:
+        queryset: The queryset used to retrieve objects.
+        serializer_class: The serializer class used to validate and deserialize objects.
+    """
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class AttributeTypeViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing attribute type instances.
+    """
+    queryset = AttributeType.objects.all()
+    serializer_class = AttributeTypeSerializer
+
+
+class ProductAttributeViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing product attribute instances.
+    """
+    queryset = ProductAttribute.objects.all()
+    serializer_class = ProductAttributeSerializer
+
+
+class ProductImageViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing product image instances.
+    """
+    queryset = ProductImage.objects.all()
+    serializer_class = ProductImageSerializer
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing product instances.
+
+    Attributes:
+        queryset: The queryset used to retrieve objects.
+        serializer_class: The serializer class used to validate and deserialize objects.
+    """
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=['post'], url_path='attributes', serializer_class=ProductAttributeSerializer)
+    def add_attribute(self, request, pk=None):
+        product = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(product=product)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=['post'], url_path='images', serializer_class=ProductImageSerializer)
+    def add_image(self, request, pk=None):
+        product = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(product=product)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

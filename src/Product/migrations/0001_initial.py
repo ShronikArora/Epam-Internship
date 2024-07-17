@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -22,7 +21,9 @@ class Migration(migrations.Migration):
                 ('rght', models.PositiveIntegerField(editable=False)),
                 ('mptt_tree_id', models.PositiveIntegerField(db_index=True, editable=False)),
                 ('mptt_level', models.PositiveIntegerField(editable=False)),
-                ('parent', mptt.fields.TreeForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='children', to='Product.category')),
+                ('parent',
+                 mptt.fields.TreeForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                            related_name='children', to='Product.category')),
             ],
             options={
                 'abstract': False,
@@ -36,7 +37,8 @@ class Migration(migrations.Migration):
                 ('brand', models.CharField(max_length=100)),
                 ('description', models.TextField()),
                 ('price', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='Product.category')),
+                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                               to='Product.category')),
             ],
         ),
         migrations.CreateModel(
@@ -45,7 +47,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('attribute_name', models.CharField(max_length=100)),
                 ('attribute_value', models.CharField(max_length=100)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='attributes', to='Product.product')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='attributes',
+                                              to='Product.product')),
             ],
         ),
         migrations.CreateModel(
@@ -53,7 +56,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('image_url', models.URLField()),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='Product.product')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images',
+                                              to='Product.product')),
             ],
         ),
     ]

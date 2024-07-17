@@ -19,6 +19,7 @@ class UserAddressModelTest(TestCase):
     def test_user_str_method(self):
         # Check the __str__ method of User
         self.assertEqual(str(self.user), 'testuser')
+
     def test_address_creation(self):
         # Create an Address
         address = Address.objects.create(
