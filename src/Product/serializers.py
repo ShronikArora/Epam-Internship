@@ -81,7 +81,6 @@ class ProductAttributeSerializer(serializers.ModelSerializer):
         if not created:
             # Handle existing AttributeType instance
             validated_data['attribute_name'] = attribute_name_instance
-            validated_data['attribute_name'] = attribute_name_instance
             return super().create(validated_data)
 
         # New AttributeType instance created, validate and create ProductAttribute

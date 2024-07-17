@@ -59,7 +59,7 @@ class AttributeTypeViewSet(viewsets.ModelViewSet):
 
 class ProductAttributeViewSet(viewsets.ModelViewSet):
     """
-    A viewset for viewing and editing product attribute instances..
+    A viewset for viewing and editing product attribute instances.
     """
     queryset = ProductAttribute.objects.all()
     serializer_class = ProductAttributeSerializer
@@ -81,9 +81,6 @@ class ProductViewSet(viewsets.ModelViewSet):
         queryset: The queryset used to retrieve objects.
         serializer_class: The serializer class used to validate and deserialize objects.
     """
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
@@ -113,7 +110,6 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save(product=product)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
 
     @action(detail=True, methods=['post'], url_path='images', serializer_class=ProductImageSerializer)
     def add_image(self, request, pk=None):
