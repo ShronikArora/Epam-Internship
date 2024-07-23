@@ -16,10 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from Users.views import CustomerRegistrationView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/products/', include('Product.urls')),
-    path('register/', CustomerRegistrationView.as_view(), name='customer-register'),
+    path('api/users/', include('Users.urls')),
 ]
