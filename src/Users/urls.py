@@ -21,4 +21,3 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('registration/', CustomerRegistrationView.as_view(), name='customer_registration'),
 ]
-
