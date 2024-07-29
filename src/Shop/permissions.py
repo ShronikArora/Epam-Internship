@@ -20,4 +20,4 @@ class IsOwnerOrReadOnly(BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in SAFE_METHODS:
             return True
-        return obj.user == request.user
+        return hasattr(obj, 'user') and obj.user and obj.user == request.user
