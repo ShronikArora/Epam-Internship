@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view, action
 from .models import User
 from Shop.permissions import IsOwnerOrReadOnly
 from .serializers import CustomerRegistrationSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 """
 This file contains viewsets for the User API .
@@ -36,6 +36,7 @@ class CustomerRegistrationView(generics.CreateAPIView):
     """
 
     serializer_class = CustomerRegistrationSerializer
+    permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
