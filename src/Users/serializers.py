@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
+from .models import Address
 
 """
 This file creates the Serializers for the Users Models.
@@ -59,3 +60,9 @@ class CustomerRegistrationSerializer(serializers.ModelSerializer):
         validated_data.pop('password_confirmation')
         user = User.objects.create_user(**validated_data)
         return user
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ['id', 'address_line', 'city', 'state', 'zip_code', 'country']

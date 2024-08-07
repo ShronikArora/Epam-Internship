@@ -4,7 +4,9 @@ from rest_framework.routers import SimpleRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import (
     CustomerRegistrationView,
-    api_root
+    api_root,
+    AddressListCreateView,
+    AddressDetailView
 )
 
 """
@@ -20,4 +22,7 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('registration/', CustomerRegistrationView.as_view(), name='customer_registration'),
+    path('addresses/', AddressListCreateView.as_view(), name='address-list-create'),
+    path('addresses/<int:pk>/', AddressDetailView.as_view(), name='address-detail'),
+
 ]

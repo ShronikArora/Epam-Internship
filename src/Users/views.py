@@ -1,13 +1,10 @@
-from rest_framework import generics
 from rest_framework.response import Response
-from rest_framework import status
-from .serializers import CustomerRegistrationSerializer
+from rest_framework import status, generics, permissions
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.views import APIView
 from rest_framework.decorators import api_view, action
-from .models import User
+from .models import User, Address
 from Shop.permissions import IsOwnerOrReadOnly
-from .serializers import CustomerRegistrationSerializer
+from .serializers import CustomerRegistrationSerializer, AddressSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 """
@@ -79,3 +76,28 @@ class ChangePasswordView(generics.UpdateAPIView):
             user.save()
             return Response({"message": "Password updated successfully."}, status=status.HTTP_200_OK)
         return Response({"error": "New password is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AddressListCreateView(generics.ListCreateAPIView):
+    """
+    View for listing and creating user addresses.
+    """
+    serializer_class = AddressSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Address.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class AddressDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    View for retrieving, updating, and deleting a specific address.
+    """
+    serializer_class = AddressSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Address.objects.filter(user=self.request.user)
