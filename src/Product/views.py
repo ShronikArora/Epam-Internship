@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, action, permission_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from .pagination import ProductPagination
 
 from Shop.permissions import IsAdminUserOrReadOnly
 from .models import Category, Product, ProductAttribute, ProductImage, AttributeType
@@ -89,6 +90,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    pagination_class = ProductPagination  # Apply the custom pagination class
 
     def get_permissions(self):
         """

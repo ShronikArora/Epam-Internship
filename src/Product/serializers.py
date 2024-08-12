@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Category, Product, ProductAttribute, ProductImage, AttributeType
+from Review.serializers import ReviewSerializer
 
 """
 This file creates the Serializers for the Product Models.
@@ -117,10 +118,11 @@ class ProductSerializer(serializers.ModelSerializer):
     """
     attributes = ProductAttributeSerializer(many=True)
     images = ProductImageSerializer(many=True)
+    reviews = ReviewSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
-        fields = ('id', 'title', 'brand', 'description', 'category', 'price', 'attributes', 'images')
+        fields = ('id', 'title', 'brand', 'description', 'category', 'price', 'attributes', 'images', 'reviews')
 
     def create(self, validated_data):
         attributes_data = validated_data.pop('attributes', [])
