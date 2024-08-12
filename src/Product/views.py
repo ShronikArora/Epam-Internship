@@ -98,19 +98,20 @@ class ProductViewSet(viewsets.ModelViewSet):
             return [AllowAny()]
         return [IsAuthenticated()]
 
-    def create(self, request, *args, **kwargs):
-        """
-               Override the create method to require authentication for creating products.
-               """
-        admin_check = self.check_admin(request)
-        if admin_check:
-            return admin_check
 
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+def create(self, request, *args, **kwargs):
+    """
+    Override the create method to require authentication for creating products.
+    """
+    admin_check = self.check_admin(request)
+    if admin_check:
+        return admin_check
+
+    serializer = self.get_serializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    self.perform_create(serializer)
+    headers = self.get_success_headers(serializer.data)
+    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 def update(self, request, *args, **kwargs):

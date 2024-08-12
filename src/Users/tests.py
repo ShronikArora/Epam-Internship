@@ -77,10 +77,12 @@ class CustomerRegistrationSerializerTest(TestCase):
         data = {
             'username': 'testuser',
             'email': 'testuser@example.com',
-            'password': 'password123',
-            'password_confirmation': 'password123',
+            'password': 'Str0ngP@ssw0rd!',
+            'password_confirmation': 'Str0ngP@ssw0rd!',
         }
         serializer = CustomerRegistrationSerializer(data=data)
+        if not serializer.is_valid():
+            print(serializer.errors)  # Print errors if validation fails
         self.assertTrue(serializer.is_valid())
         user = serializer.save()
         self.assertEqual(user.username, data['username'])
@@ -114,12 +116,12 @@ class CustomerRegistrationViewTest(APITestCase):
         Test registering a user with valid data.
         Should succeed and return the created user data.
         """
-        url = reverse('customer-register')
+        url = reverse('customer_registration')
         data = {
             'username': 'testuser',
             'email': 'testuser@example.com',
-            'password': 'password123',
-            'password_confirmation': 'password123',
+            'password': 'Str0ngP@ssw0rd!',
+            'password_confirmation': 'Str0ngP@ssw0rd!',
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -134,7 +136,7 @@ class CustomerRegistrationViewTest(APITestCase):
         Test registering a user when the passwords do not match.
         Should fail and return a 400 status with an error message.
         """
-        url = reverse('customer-register')
+        url = reverse('customer_registration')
         data = {
             'username': 'testuser',
             'email': 'testuser@example.com',

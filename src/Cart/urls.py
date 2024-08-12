@@ -7,4 +7,5 @@ router.register(r'cart-items', CartItemViewSet, basename='cartitem')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('cart-items/checkout/', CartItemViewSet.as_view({'post': 'checkout'}), name='cart-checkout'),
 ]

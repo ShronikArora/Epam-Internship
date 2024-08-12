@@ -10,6 +10,7 @@ from .serializers import (
     ProductAttributeSerializer,
     ProductImageSerializer
 )
+from django.contrib.auth import get_user_model
 
 """
 This module contains test cases for the Product, ProductAttribute, ProductImage, Category, and AttributeType models,
@@ -211,6 +212,15 @@ class ProductAPITestCase(TestCase):
         Set up initial test data and API client.
         """
         self.client = APIClient()
+
+        # Create and authenticate a superuser
+        self.User = get_user_model()
+        self.user = self.User.objects.create_superuser(
+            username='admin',
+            email='admin@example.com',
+            password='adminpass'
+        )
+        self.client.force_authenticate(user=self.user)
         self.category = Category.objects.create(name='Electronics')
         self.product = Product.objects.create(
             title='Laptop',
@@ -280,6 +290,8 @@ class ProductAPITestCase(TestCase):
         Test the creation of a new product through the API.
         """
         url = reverse('product-list')
+        self.client.force_authenticate(user=self.user)
+
         data = {
             'title': 'Smartphone',
             'brand': 'BrandY',
@@ -299,6 +311,8 @@ class ProductAPITestCase(TestCase):
         Test creating a product with a duplicate title.
         """
         url = reverse('product-list')
+        self.client.force_authenticate(user=self.user)
+
         data = {
             'title': 'Laptop',
             'brand': 'BrandY',
@@ -314,6 +328,8 @@ class ProductAPITestCase(TestCase):
         Test deleting a product through the API.
         """
         url = reverse('product-detail', kwargs={'pk': self.product.id})
+        self.client.force_authenticate(user=self.user)
+
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Product.objects.count(), 0)
@@ -323,6 +339,8 @@ class ProductAPITestCase(TestCase):
         Test updating a product through the API.
         """
         url = reverse('product-detail', kwargs={'pk': self.product.id})
+        self.client.force_authenticate(user=self.user)
+
         data = {
             'title': 'Updated Laptop',
             'brand': 'BrandX',
@@ -346,7 +364,16 @@ class ProductSerializerTestCase(TestCase):
         """
         Set up initial test data.
         """
+        self.client = APIClient()
 
+        # Create and authenticate a superuser
+        self.User = get_user_model()
+        self.user = self.User.objects.create_superuser(
+            username='admin',
+            email='admin@example.com',
+            password='adminpass'
+        )
+        self.client.force_authenticate(user=self.user)
         self.category = Category.objects.create(name='Electronics')
         self.product = Product.objects.create(
             title='Laptop',
